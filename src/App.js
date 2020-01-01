@@ -10,6 +10,8 @@ class App extends React.Component {
   }
   render() {
     return <div>
+      <h1>the last updated item goes to the bottom of the list</h1>
+      <h3>"it's not a bug, it's a feature!"</h3>
       <AddTask addTaskCallback={this.pushTask}></AddTask>
       <TaskList tasksList={this.tasks}></TaskList>
     </div>

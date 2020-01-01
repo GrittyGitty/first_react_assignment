@@ -4,17 +4,15 @@ class TaskItem extends React.Component {
     constructor(props) {
         super(props);
         this.text = props.text;
+        this.onClick = props.onClick;
     }
-    render() {
-        console.log(this.text);
-        
+    render() {        
         return <li>
-            <div>
+            <div onClick={this.onClick}>
                 {this.text}
             </div>
         </li>
     }
-
 }
 
 export default TaskItem;
