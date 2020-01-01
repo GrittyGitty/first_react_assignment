@@ -25,19 +25,9 @@ class TaskList extends React.Component {
 
     printTasks(list) {
         let elements = [];
-        // console.log(list);
-        
         for (let task of list) {
             elements.push(<TaskItem text={task.text}></TaskItem>);
-            
-            // elements.push(<li key={task.text}>
-            //             <div onClick={this.toggleTaskByText}>
-            //                 {this.getTaskText(task)}
-            //             </div>
-            //         </li>)
         }
-        // console.log(elements);
-        
         return elements;
     }
 
@@ -55,12 +45,9 @@ class TaskList extends React.Component {
     }
 
     getTaskText(task) {
-        if (task.isDone) {
-            return <p><del>{task.text}</del></p>
-        }
-        else {
-            return <p>{task.text}</p>
-        }
+        return (task.isDone) ?
+            <p><del>{task.text}</del></p> :
+            <p>{task.text}</p>;
     }
 
 }

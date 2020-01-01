@@ -3,16 +3,17 @@ import React from 'react';
 class TaskItem extends React.Component {
     constructor(props) {
         super(props);
-        this.text = props.text;
+        this.text = this.props.text;
     }
     render() {
-        console.log(this.text);
-        
-        return <li>
-            <div>
-                {this.text}
-            </div>
-        </li>
+        return (
+            <li>
+                <div>
+                    <span>{this.text}</span>
+                    <button className="listDelButton">delete me</button>
+                </div>
+            </li>
+        );
     }
 
 }

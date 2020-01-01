@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+// document.getElementsByTagName("body")[0].append((document.createTextNode("fff")));
 ReactDOM.render(<App />, document.getElementById('app'));
 
 // If you want your app to work offline and load faster, you can change
