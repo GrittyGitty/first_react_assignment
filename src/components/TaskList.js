@@ -6,49 +6,41 @@ class TaskList extends React.Component {
     constructor(props) {
         super(props);
         this.tasks = props.tasksList;
-        this.toggleTaskByText = this.toggleTaskByText.bind(this);
-        this.tasks.push(new Task("buy pizza"));
+        this.updateAppWithNewPropsCallBack = this.props.updateAppWithNewPropsCallBack;
+        this.tasks.push(new Task("buy pizza"), new Task("kloopi"), new Task("groopi"));
     }
 
     componentWillReceiveProps(props) {
         this.tasks = props.tasksList;
-        this.forceUpdate();
     }
 
     render() {
-        return <div>
-            <ul>
-                {this.printTasks(this.tasks)}
-            </ul>
-        </div>
+        let result = this.printTasks(this.tasks);
+        return (
+            <div>
+                <ul>
+                    {result}
+                </ul>
+            </div>
+        );
+    }
+
+    componentDidUpdate(){
+        console.log(this.tasks);
     }
 
     printTasks(list) {
-        let elements = [];
-        for (let task of list) {
-            elements.push(<TaskItem text={task.text}></TaskItem>);
-        }
-        return elements;
+        return list.map((task, index) => {
+            return (<TaskItem key={index} id={index} deleteCallback={this.deleteTask.bind(this)} task={task}></TaskItem>)
+        });
     }
 
-
-
-    toggleTaskByText(event) {
-        console.log(event.target);
-        let text = "a";
-        for (let task of this.tasks) {
-            if (task.text === text) {
-                task.toggleTaskByText();
-            }
-        }
+    deleteTask(elID) {
+        this.tasks = this.tasks.filter((ele) => {return ele !== elID})
         this.forceUpdate();
+        
+        // this.updateAppWithNewPropsCallBack(
+        //     this.tasks.filter((el, index) => index !== elID));
     }
-
-    getTaskText(task) {
-        return (task.isDone) ?
-            <p><del>{task.text}</del></p> :
-            <p>{task.text}</p>;
-    }
-
 }
 export default TaskList;

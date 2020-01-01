@@ -11,17 +11,23 @@ class App extends React.Component {
     return (
       <div>
         <AddTask addTaskCallback={this.pushTask}></AddTask>
-        <TaskList tasksList={this.tasks}></TaskList>
+        <TaskList
+          updateAppWithNewPropsCallBack={this.updateTasks.bind(this)}
+          tasksList={this.tasks}>
+        </TaskList>
       </div>
     );
   }
-  pushTask(task) { // task= new Task(input.text)
+  pushTask(task) { // task = new Task(input.text)
     if (task)
       this.tasks.push(task);
-
     this.forceUpdate();
   }
 
+  updateTasks(tasks) {
+    this.tasks = tasks;
+    this.forceUpdate();
+  }
 }
 
 export default App;
