@@ -15,7 +15,7 @@ export default class AddTask extends React.Component {
     return <div>
       <input onChange={this.handleTaskInputChange} id="task_input" type="text"></input>
       <br></br>
-      <button onClick={this.handleAddTaskClick}>Add task</button>
+      <button onClick={this.handleAddTaskClick.bind(this)}>Add task</button>
     </div>
   }
 
@@ -24,9 +24,7 @@ export default class AddTask extends React.Component {
   }
 
   handleAddTaskClick() {
-    if (this.addTaskCallback) {
       let task = new Task(this.task_text);
       this.addTaskCallback(task); // (push task)
-    }
   }
 }

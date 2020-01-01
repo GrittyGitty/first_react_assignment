@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useDebugValue } from 'react';
 import AddTask from './components/AddTask';
 import TaskList from './components/TaskList';
 class App extends React.Component {
@@ -7,18 +7,30 @@ class App extends React.Component {
     super(props);
     this.pushTask = this.pushTask.bind(this);
   }
+
+  componentWillReceiveProps(props) {
+    this.tasks = props.tasks;
+  }
+
   render() {
     return (
       <div>
         <AddTask addTaskCallback={this.pushTask}></AddTask>
         <TaskList
-          updateAppWithNewPropsCallBack={this.updateTasks.bind(this)}
-          tasksList={this.tasks}>
+          tasksList={this.tasks}
+          propagateToApp={this.deleteTask.bind(this)}
+        >
         </TaskList>
       </div>
     );
   }
-  pushTask(task) { // task = new Task(input.text)
+
+  deleteTask(delTask) {
+    this.tasks = this.tasks.filter(task => task !== delTask);
+    this.forceUpdate();
+  }
+
+  pushTask(task) {
     if (task)
       this.tasks.push(task);
     this.forceUpdate();

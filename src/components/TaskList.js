@@ -1,13 +1,11 @@
 import React from 'react';
 import TaskItem from './taskItem';
-import Task from '../entities/task';
 
 class TaskList extends React.Component {
     constructor(props) {
         super(props);
-        this.tasks = props.tasksList;
-        this.updateAppWithNewPropsCallBack = this.props.updateAppWithNewPropsCallBack;
-        this.tasks.push(new Task("buy pizza"), new Task("kloopi"), new Task("groopi"));
+        this.tasks = this.props.tasksList;
+        this.propagateToApp = this.props.propagateToApp;
     }
 
     componentWillReceiveProps(props) {
@@ -25,22 +23,29 @@ class TaskList extends React.Component {
         );
     }
 
-    componentDidUpdate(){
-        console.log(this.tasks);
-    }
 
     printTasks(list) {
         return list.map((task, index) => {
-            return (<TaskItem key={index} id={index} deleteCallback={this.deleteTask.bind(this)} task={task}></TaskItem>)
+            return ((
+                <TaskItem
+                    key={index}
+                    id={index}
+                    propagateToApp={this.propagateToApp}
+                    toggleSoftDeleteCallback={this.toggleSoftDeleteTask.bind(this)}
+                    task={task}>
+                </TaskItem>
+            ))
         });
     }
 
-    deleteTask(elID) {
-        this.tasks = this.tasks.filter((ele) => {return ele !== elID})
+
+    toggleSoftDeleteTask(crossTask) {
+        this.tasks
+            .filter(task =>
+                task === crossTask)
+            .forEach(task =>
+                task.isDone = !task.isDone);
         this.forceUpdate();
-        
-        // this.updateAppWithNewPropsCallBack(
-        //     this.tasks.filter((el, index) => index !== elID));
     }
 }
 export default TaskList;

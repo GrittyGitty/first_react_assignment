@@ -1,39 +1,52 @@
 import React from 'react';
 
 class TaskItem extends React.Component {
-    
+
     constructor(props) {
         super(props);
         this.task = this.props.task;
-        this.deleteMe = this.props.deleteCallback;
+        this.propagateToTaskList = this.props.propagateToApp;
+        this.toggleSoftDeleteMe = this.props.toggleSoftDeleteCallback;
         this.id = this.props.id;
     }
 
     componentWillReceiveProps(props) {
         this.task = props.task;
-        this.id = this.props.id;
     }
 
-    render() {       
+    render() {
+        let crossedOrUncrossed = this.task.isDone ?
+            (<del>{this.task.text}</del>) :
+            this.task.text;
+        let allTextElement = (
+            <span
+                onClick={this.toggleSoftDeleteMiddleware.bind(this)}>
+                {crossedOrUncrossed}
+            </span>);
+
+        let deleteButton = (
+            <button
+                onClick={this.propagateToTaskListMiddleware.bind(this)}
+                className="listDelButton">
+                delete me
+            </button>
+        );
         return (
             <li>
                 <div>
-                    <span>{this.task.text}</span>
-                    <button
-                        onClick={
-                            this.deleteMeMiddleware.bind(this)
-                        }
-                        className="listDelButton">
-                        delete me
-                    </button>
+                    {allTextElement}
+                    {deleteButton}
                 </div>
             </li>
         );
     }
 
-    deleteMeMiddleware() {
-        console.log(this.task);
-        this.deleteMe(this.task)
+    toggleSoftDeleteMiddleware() {
+        this.toggleSoftDeleteMe(this.task);
+    }
+
+    propagateToTaskListMiddleware() {
+        this.propagateToTaskList(this.task);
     }
 
 }
