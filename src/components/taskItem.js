@@ -5,9 +5,12 @@ class TaskItem extends React.Component {
     constructor(props) {
         super(props);
         this.task = this.props.task;
-        this.propagateToTaskList = this.props.propagateToApp;
-        this.toggleSoftDeleteMe = this.props.toggleSoftDeleteCallback;
         this.id = this.props.id;
+
+        this.propagateHardDeleteToTaskList = this.props.propagateHardDeleteToApp;
+        this.propagateSoftDeleteToApp = this.props.propagateSoftDeleteToTaskList
+        this.propagateToggleEditModeToTaskList = this.props.propagateToggleEditModeToApp;
+        this.propagateTaskTextUpdateToApp = this.props.propagateTaskTextUpdateToApp;
     }
 
     componentWillReceiveProps(props) {
@@ -15,40 +18,66 @@ class TaskItem extends React.Component {
     }
 
     render() {
-        let crossedOrUncrossed = this.task.isDone ?
-            (<del>{this.task.text}</del>) :
-            this.task.text;
-        let allTextElement = (
-            <span
-                onClick={this.toggleSoftDeleteMiddleware.bind(this)}>
-                {crossedOrUncrossed}
-            </span>);
+        let module =
+            this.task.dblClicked ?
+                (<input
+                    id="edit"
+                    type="text"
+                    placeholder="edit task..."
+                    onKeyDown={this.checkForEnter.bind(this)}>
+                </input>) :
+                (<span>
+                    <span
+                        id="content"
+                        onDoubleClick={this.editMode.bind(this)}>
+                        {this.task.isDone ?
+                            (<del>{this.task.text}</del>) :
+                            this.task.text}
+                    </span>
+                    <button
+                        id="cross"
+                        className="listDelButton"
+                        onClick={this.crossText.bind(this)}>
+                        <del>done</del>
+                    </button>
+                </span>);
 
         let deleteButton = (
             <button
-                onClick={this.propagateToTaskListMiddleware.bind(this)}
+                id="delButton"
+                onClick={this.hardDelete.bind(this)}
                 className="listDelButton">
-                delete me
+                🗑️
             </button>
         );
+
         return (
             <li>
-                <div>
-                    {allTextElement}
+                <span>
+                    {module}
                     {deleteButton}
-                </div>
+                </span>
             </li>
         );
     }
 
-    toggleSoftDeleteMiddleware() {
-        this.toggleSoftDeleteMe(this.task);
+    checkForEnter(event) {
+        if (event.key === 'Enter')
+            this.propagateTaskTextUpdateToApp(event.target.value, this.task)
+
     }
 
-    propagateToTaskListMiddleware() {
-        this.propagateToTaskList(this.task);
+    editMode() {
+        this.propagateToggleEditModeToTaskList(this.task);
     }
 
+    crossText() {
+        this.propagateSoftDeleteToApp(this.task);
+    }
+
+    hardDelete() {
+        this.propagateHardDeleteToTaskList(this.task);
+    }
 }
 
 export default TaskItem;

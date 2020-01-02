@@ -5,7 +5,10 @@ class TaskList extends React.Component {
     constructor(props) {
         super(props);
         this.tasks = this.props.tasksList;
-        this.propagateToApp = this.props.propagateToApp;
+        this.propagateHardDeleteToApp = this.props.propagateHardDeleteToApp;
+        this.propagateToggleEditModeToApp = this.props.propagateToggleEditModeToApp;
+        this.propagateTaskTextUpdateToApp = this.props.propagateTaskTextUpdateToApp;
+        this.propagateToggleSoftDeleteToApp = this.props.propagateToggleSoftDeleteToApp;
     }
 
     componentWillReceiveProps(props) {
@@ -28,24 +31,18 @@ class TaskList extends React.Component {
         return list.map((task, index) => {
             return ((
                 <TaskItem
+                    task={task}
                     key={index}
                     id={index}
-                    propagateToApp={this.propagateToApp}
-                    toggleSoftDeleteCallback={this.toggleSoftDeleteTask.bind(this)}
-                    task={task}>
+
+                    propagateSoftDeleteToTaskList={this.propagateToggleSoftDeleteToApp}
+                    propagateHardDeleteToApp={this.propagateHardDeleteToApp}
+                    propagateToggleEditModeToApp={this.propagateToggleEditModeToApp}
+                    propagateTaskTextUpdateToApp={this.propagateTaskTextUpdateToApp}
+                >
                 </TaskItem>
             ))
         });
-    }
-
-
-    toggleSoftDeleteTask(crossTask) {
-        this.tasks
-            .filter(task =>
-                task === crossTask)
-            .forEach(task =>
-                task.isDone = !task.isDone);
-        this.forceUpdate();
     }
 }
 export default TaskList;
