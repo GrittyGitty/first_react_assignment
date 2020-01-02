@@ -2,6 +2,7 @@ import React from 'react';
 import AddTask from './components/AddTask';
 import TaskList from './components/TaskList';
 import Task from './entities/task';
+import StatusBar from './components/StatusBar';
 
 class App extends React.Component {
   constructor(props) {
@@ -18,6 +19,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        <StatusBar taskList={this.tasks}></StatusBar>
         <AddTask addTaskCallback={this.pushTask}></AddTask>
         <TaskList
           tasksList={this.tasks}

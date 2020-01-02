@@ -4,8 +4,7 @@ class TaskItem extends React.Component {
 
     constructor(props) {
         super(props);
-        this.task = this.props.task;
-        this.id = this.props.id;
+        this.state = { task: props.task, id: props.id};
 
         this.propagateHardDeleteToTaskList = this.props.propagateHardDeleteToApp;
         this.propagateSoftDeleteToApp = this.props.propagateSoftDeleteToTaskList
@@ -14,12 +13,12 @@ class TaskItem extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        this.task = props.task;
+        this.setState({task: props.task, id: props.id});
     }
 
     render() {
         let module =
-            this.task.dblClicked ?
+            this.state.task.dblClicked ?
                 (<input
                     id="edit"
                     type="text"
@@ -30,9 +29,9 @@ class TaskItem extends React.Component {
                     <span
                         id="content"
                         onDoubleClick={this.editMode.bind(this)}>
-                        {this.task.isDone ?
-                            (<del>{this.task.text}</del>) :
-                            this.task.text}
+                        {this.state.task.isDone ?
+                            (<del>{this.state.task.text}</del>) :
+                            this.state.task.text}
                     </span>
                     <button
                         id="cross"
@@ -63,20 +62,20 @@ class TaskItem extends React.Component {
 
     checkForEnter(event) {
         if (event.key === 'Enter')
-            this.propagateTaskTextUpdateToApp(event.target.value, this.task)
+            this.propagateTaskTextUpdateToApp(event.target.value, this.state.task)
 
     }
 
     editMode() {
-        this.propagateToggleEditModeToTaskList(this.task);
+        this.propagateToggleEditModeToTaskList(this.state.task);
     }
 
     crossText() {
-        this.propagateSoftDeleteToApp(this.task);
+        this.propagateSoftDeleteToApp(this.state.task);
     }
 
     hardDelete() {
-        this.propagateHardDeleteToTaskList(this.task);
+        this.propagateHardDeleteToTaskList(this.state.task);
     }
 }
 
