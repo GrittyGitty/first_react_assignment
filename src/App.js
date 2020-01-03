@@ -7,11 +7,12 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.pushTask = this.pushTask.bind(this);
+    this.removeTask = this.removeTask.bind(this);
   }
   render() {
     return <div>
       <AddTask addTaskCallback={this.pushTask}></AddTask>
-      <TaskList tasksList={this.tasks}></TaskList>
+      <TaskList tasksList={this.tasks} remove={this.removeTask}></TaskList>
     </div>
   }
   pushTask(task) {
@@ -20,7 +21,17 @@ class App extends React.Component {
     
     this.forceUpdate();
   }
-
+  removeTask(task){
+    
+    if(task){
+    let index = this.tasks.findIndex((t)=>t.text === task.text)
+     if(this.tasks[index])
+         this.tasks[index].toggleDone();
+      console.log(this.tasks);
+    }
+    this.forceUpdate();
+  }
+  
 }
 
 export default App;
