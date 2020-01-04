@@ -1,11 +1,13 @@
 import React from 'react';
 
 class TaskItem extends React.Component {
+    text = '';
     constructor(props) {
         super(props);
         this.task = props.task;
         this.remove =props.remove;
         this.deleteMe = this.deleteMe.bind(this);
+        this.changeMe = this.changeMe.bind(this);
         
     }
     render() {
@@ -13,7 +15,7 @@ class TaskItem extends React.Component {
      {
         return <li>
             <div> 
-               <span>{this.task.text}</span> 
+               <span onInput={this.changeMe} contentEditable="true">{this.task.text}</span> 
                <button onClick={this.deleteMe}>X</button>
             </div>
         </li>
@@ -21,7 +23,7 @@ class TaskItem extends React.Component {
      else{
         return <li>
         <div> 
-           <span style={{"text-decoration":"line-through"}}>{this.task.text}</span> 
+           <span style={{"textDecoration":"line-through"}}>{this.task.text}</span> 
            <button onClick={this.deleteMe}>X</button>
         </div>
         </li>
@@ -30,6 +32,10 @@ class TaskItem extends React.Component {
     deleteMe()
     {
        this.remove(this.task);
+    }
+    changeMe(event)
+    {
+        this.task.text= event.currentTarget.textContent;
     }
     
 
