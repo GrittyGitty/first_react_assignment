@@ -21,6 +21,7 @@ class TaskItem extends React.Component {
         let taskModule =
             dblClicked ?
                 (<input
+                    autoFocus
                     placeholder="edit task..."
                     onKeyDown={this.checkForEnter}>
                 </input>) :
@@ -58,8 +59,7 @@ class TaskItem extends React.Component {
 
     checkForEnter = (event) => {
         if (event.key === 'Enter') {
-            this.taskTextUpdateCallback(event.target.value, this.state.task)
-            this.editMode();
+            this.taskTextUpdateCallback(event.target.value, this.state.task);
         }
     }
 

@@ -2,6 +2,8 @@ import React from 'react';
 import TaskItem from './taskItem';
 import Task from '../entities/task';
 import reg from '../communicatorRegistry';
+import StatusBar from './StatusBar';
+import AddTask from './AddTask';
 
 
 class TaskList extends React.Component {
@@ -10,45 +12,46 @@ class TaskList extends React.Component {
         this.state = {
             tasks: [new Task("pizza"), new Task("finish react course")]
         };
+    }
+
+    componentDidMount() {
         reg.registerAction(this.concatTask, this);
     }
 
-    componentWillReceiveProps(props) {
-        this.setState({ tasks: props.tasks })
+    componentDidUpdate() {
+        reg.action('updateStatusBar', this.state.tasks);
     }
-
-    concatTask(task) {
-        console.log(task);
-        let tasks = this.state.tasks;
-        if (!tasks.some(iTask => iTask.text === task.text))
-            this.setState({ tasks: tasks.concat(task) });
-    }
-
 
     render() {
         return (
             <div>
+                <StatusBar tasks={this.state.tasks}></StatusBar>
+                <AddTask></AddTask>
                 <ul>
-                    {this.printTasks(this.state.tasks)}
+                    {this.state.tasks.map((task, index) => {
+                        return ((
+                            <TaskItem
+                                task={task}
+                                key={index}
+                                toggleCrossTask={this.toggleCrossTask.bind(this)}
+                                deleteTask={this.deleteTask.bind(this)}
+                                toggleEditMode={this.toggleEditMode.bind(this)}
+                                updateTaskText={this.updateTaskText.bind(this)}
+                            >
+                            </TaskItem>
+                        ))
+                    })}
                 </ul>
+
             </div>
         );
     }
 
-    printTasks(list) {
-        return list.map((task, index) => {
-            return ((
-                <TaskItem
-                    task={task}
-                    key={index}
-                    toggleCrossTask={this.toggleCrossTask}
-                    deleteTask={this.deleteTask}
-                    toggleEditMode={this.toggleEditMode}
-                    updateTaskText={this.updateTaskText}
-                >
-                </TaskItem>
-            ))
-        });
+
+    concatTask(task) {
+        let tasks = this.state.tasks;
+        if (!tasks.some(iTask => iTask.text === task.text))
+            this.setState({ tasks: tasks.concat(task) });
     }
 
     deleteTask(delTask) {
@@ -69,10 +72,12 @@ class TaskList extends React.Component {
 
     updateTaskText(text, task) {
         let tasks = this.state.tasks.slice();
-        tasks.forEach(iTask => {
+        let switchIndex = -1;
+        tasks.forEach((iTask, index) => {
             if (iTask.text === task.text)
-                iTask.text = text;
+                switchIndex = index;
         });
+        tasks.splice(switchIndex, 1, new Task(text));
         this.setState({ tasks: tasks });
     }
 

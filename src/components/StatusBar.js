@@ -1,16 +1,21 @@
 import React from 'react';
-
+import reg from '../communicatorRegistry';
 
 class StatusBar extends React.Component {
     constructor(props) {
         super(props);
+        reg.registerAction(this.updateStatusBar, this);
         this.state = {
             tasks: props.tasks
         }
     }
 
-    componentWillReceiveProps(props) {
-        this.setState({ tasks: props.tasks });
+    // componentWillReceiveProps(tasks) {
+    //     this.setState({tasks:tasks})
+    // }
+
+    updateStatusBar(tasks) {
+        this.setState({ tasks: tasks });
     }
 
     render() {

@@ -2,8 +2,7 @@ import React from 'react';
 import Task from '../entities/task';
 import reg from '../communicatorRegistry';
 
-export default class AddTask extends React.Component {
-
+class AddTask extends React.Component {
   constructor(props) {
     super(props);
     this.state = { taskText: '' };
@@ -14,7 +13,7 @@ export default class AddTask extends React.Component {
       <div>
         <input onChange={this.handleTaskInputChange}></input>
         <br></br>
-        <button onClick={this.handleAddTaskClick}>Add task</button>
+        <button onClick={this.handleAddTaskClick.bind(this)}>Add task</button>
       </div>);
   }
 
@@ -22,7 +21,9 @@ export default class AddTask extends React.Component {
     this.setState({ taskText: event.target.value })
   }
 
-  handleAddTaskClick = () => {
-    reg.action(reg.concatTask, new Task(this.state.taskText));
+  handleAddTaskClick() {
+    reg.action('concatTask', new Task(this.state.taskText));
   }
 }
+
+export default AddTask;
