@@ -5,8 +5,9 @@ export default class AddTask extends React.Component {
 
   constructor(props) {
     super(props);
-    this.addTaskCallback = props.addTaskCallback;
+    this.concatTaskCallback = props.concatTaskCallback;
     this.state = { taskText: '' };
+
   }
 
   render() {
@@ -22,6 +23,6 @@ export default class AddTask extends React.Component {
   }
 
   handleAddTaskClick = () => {
-    this.addTaskCallback(new Task(this.state.taskText));
+    this.concatTaskCallback(new Task(this.state.taskText));
   }
 }

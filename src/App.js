@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react';
 import AddTask from './components/AddTask';
 import TaskList from './components/TaskList';
 import Task from './entities/task';
@@ -14,27 +15,46 @@ class App extends React.Component {
   }
 
   render() {
+
+    let taskList = React.createElement(TaskList, {
+      tasks: this.state.tasks,
+      propagateHardDeleteToApp: this.deleteTask,
+      propagateToggleEditModeToApp: this.toggleEditMode,
+      propagateTaskTextUpdateToApp: this.updateTaskText,
+      propagateToggleSoftDeleteToApp: this.toggleCrossTask
+    });
+
+    let statusBar = React.createElement(StatusBar, {
+      tasks: this.state.tasks
+    });
+
+    let addTask = React.createElement(AddTask, {
+      concatTaskCallback: this.concatTaskCallback.bind(ReactDOM.render(taskList))
+    });
+
     return (
       <div>
-        <StatusBar tasks={this.state.tasks}></StatusBar>
-        <AddTask addTaskCallback={this.concatTask}></AddTask>
-        <TaskList
-          tasks={this.state.tasks}
-          propagateHardDeleteToApp={this.deleteTask}
-          propagateToggleEditModeToApp={this.toggleEditMode}
-          propagateTaskTextUpdateToApp={this.updateTaskText}
-          propagateToggleSoftDeleteToApp={this.toggleCrossTask}
-        >
-        </TaskList>
+        {statusBar}
+        {addTask}
+        {taskList}
       </div>
     );
   }
 
-  concatTask = (task) => {
-    let tasks = this.state.tasks;
-    if (task && !tasks.some(iTask => iTask.text === task.text))
-      this.setState({ tasks: tasks.concat(task) });
+
+  concatTaskCallback(task) {
+    this.concatTask(task);
   }
+
+
+  deleteTask = (delTask) => {
+    this.setState({
+      tasks: this.state.tasks.slice().filter(iTask =>
+        iTask.text !== delTask.text)
+    });
+  }
+
+
 
   toggleEditMode = (task) => {
     let tasks = this.state.tasks.slice();
@@ -54,18 +74,11 @@ class App extends React.Component {
     this.setState({ tasks: tasks });
   }
 
-  deleteTask = (delTask) => {
-    this.setState({
-      tasks: this.state.tasks.slice().filter(iTask =>
-        iTask.text !== delTask.text)
-    });
-  }
-
   toggleCrossTask = (task) => {
     let tasks = this.state.tasks.slice();
     tasks.forEach(iTask => {
       if (iTask.text === task.text)
-        iTask.isDone = !iTask.isDone
+        iTask.isDone = !iTask.isDone;
     });
     this.setState({ tasks: tasks });
   }

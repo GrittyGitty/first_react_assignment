@@ -5,15 +5,23 @@ class TaskList extends React.Component {
     constructor(props) {
         super(props);
         this.state = { tasks: props.tasks }
-        this.propagateHardDeleteToApp = this.props.propagateHardDeleteToApp;
-        this.propagateToggleEditModeToApp = this.props.propagateToggleEditModeToApp;
-        this.propagateTaskTextUpdateToApp = this.props.propagateTaskTextUpdateToApp;
-        this.propagateToggleSoftDeleteToApp = this.props.propagateToggleSoftDeleteToApp;
+        this.propagateHardDeleteToApp = props.propagateHardDeleteToApp;
+        this.propagateToggleEditModeToApp = props.propagateToggleEditModeToApp;
+        this.propagateTaskTextUpdateToApp = props.propagateTaskTextUpdateToApp;
+        this.propagateToggleSoftDeleteToApp = props.propagateToggleSoftDeleteToApp;
     }
 
     componentWillReceiveProps(props) {
         this.setState({ tasks: props.tasks })
     }
+
+
+    concatTask (task) {
+        let tasks = this.state.tasks;
+        if (!tasks.some(iTask => iTask.text === task.text))
+            this.setState({ tasks: tasks.concat(task) });
+    }
+
 
     render() {
         return (
