@@ -5,26 +5,32 @@ class StatusBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            taskList: props.taskList
+            tasks: props.tasks
         }
     }
+
+    componentWillReceiveProps(props) {
+        this.setState({ tasks: props.tasks });
+    }
+
     render() {
-        let {done, undone} = this.getComputedDoneTasks();
+        let { done, undone } = this.getComputedDoneTasks();
         return <div>
-            Number of tasks: {this.state.taskList.length}
             <br></br>
-            Number of done tasks: {done}
+            Number of tasks: {this.state.tasks.length} |
+
+            Number of completed tasks: {done} |
+
+            Number of uncomplete tasks: {undone}
             <br></br>
-            Number of undone tasks: {undone}
+            <br></br>
         </div>
     }
-    componentWillReceiveProps(props) {
-        this.setState({taskList : props.taskList})
-    }
+
     getComputedDoneTasks() {
-        let done = this.state.taskList.filter(task => task.isDone).length;
-        let undone = this.state.taskList.length - done;
-        return {done, undone};
+        let done = this.state.tasks.filter(task => task.isDone).length;
+        let undone = this.state.tasks.length - done;
+        return { done, undone };
     }
 }
 

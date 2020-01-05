@@ -4,47 +4,42 @@ class TaskItem extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { task: props.task, id: props.id};
+        this.state = { task: props.task };
 
         this.propagateHardDeleteToTaskList = this.props.propagateHardDeleteToApp;
-        this.propagateSoftDeleteToApp = this.props.propagateSoftDeleteToTaskList
+        this.propagateSoftDeleteToApp = this.props.propagateSoftDeleteToApp;
         this.propagateToggleEditModeToTaskList = this.props.propagateToggleEditModeToApp;
         this.propagateTaskTextUpdateToApp = this.props.propagateTaskTextUpdateToApp;
     }
 
     componentWillReceiveProps(props) {
-        this.setState({task: props.task, id: props.id});
+        this.setState({ task: props.task });
     }
 
     render() {
-        let module =
+        let taskModule =
             this.state.task.dblClicked ?
                 (<input
-                    id="edit"
-                    type="text"
                     placeholder="edit task..."
-                    onKeyDown={this.checkForEnter.bind(this)}>
+                    onKeyDown={this.checkForEnter}>
                 </input>) :
                 (<span>
                     <span
-                        id="content"
-                        onDoubleClick={this.editMode.bind(this)}>
+                        onDoubleClick={this.editMode}>
                         {this.state.task.isDone ?
                             (<del>{this.state.task.text}</del>) :
                             this.state.task.text}
                     </span>
                     <button
-                        id="cross"
                         className="listDelButton"
-                        onClick={this.crossText.bind(this)}>
+                        onClick={this.crossText}>
                         <del>done</del>
                     </button>
                 </span>);
 
         let deleteButton = (
             <button
-                id="delButton"
-                onClick={this.hardDelete.bind(this)}
+                onClick={this.hardDelete}
                 className="listDelButton">
                 🗑️
             </button>
@@ -53,28 +48,29 @@ class TaskItem extends React.Component {
         return (
             <li>
                 <span>
-                    {module}
+                    {taskModule}
                     {deleteButton}
                 </span>
             </li>
         );
     }
 
-    checkForEnter(event) {
-        if (event.key === 'Enter')
+    checkForEnter = (event) => {
+        if (event.key === 'Enter') {
             this.propagateTaskTextUpdateToApp(event.target.value, this.state.task)
-
+            this.editMode();
+        }
     }
 
-    editMode() {
+    editMode = () => {
         this.propagateToggleEditModeToTaskList(this.state.task);
     }
 
-    crossText() {
+    crossText = () => {
         this.propagateSoftDeleteToApp(this.state.task);
     }
 
-    hardDelete() {
+    hardDelete = () => {
         this.propagateHardDeleteToTaskList(this.state.task);
     }
 }

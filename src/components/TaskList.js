@@ -4,7 +4,7 @@ import TaskItem from './taskItem';
 class TaskList extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {tasks : this.props.tasksList}
+        this.state = { tasks: props.tasks }
         this.propagateHardDeleteToApp = this.props.propagateHardDeleteToApp;
         this.propagateToggleEditModeToApp = this.props.propagateToggleEditModeToApp;
         this.propagateTaskTextUpdateToApp = this.props.propagateTaskTextUpdateToApp;
@@ -12,15 +12,14 @@ class TaskList extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        this.setState({tasks : props.tasksList})
+        this.setState({ tasks: props.tasks })
     }
 
     render() {
-        let result = this.printTasks(this.state.tasks);
         return (
             <div>
                 <ul>
-                    {result}
+                    {this.printTasks(this.state.tasks)}
                 </ul>
             </div>
         );
@@ -32,8 +31,7 @@ class TaskList extends React.Component {
                 <TaskItem
                     task={task}
                     key={index}
-                    id={index}
-                    propagateSoftDeleteToTaskList={this.propagateToggleSoftDeleteToApp}
+                    propagateSoftDeleteToApp={this.propagateToggleSoftDeleteToApp}
                     propagateHardDeleteToApp={this.propagateHardDeleteToApp}
                     propagateToggleEditModeToApp={this.propagateToggleEditModeToApp}
                     propagateTaskTextUpdateToApp={this.propagateTaskTextUpdateToApp}

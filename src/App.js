@@ -8,59 +8,66 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.tasks = [new Task("pizza"), new Task("finish react course")];
-    this.pushTask = this.pushTask.bind(this);
-
-  }
-
-  componentWillReceiveProps(props) {
-    this.tasks = props.tasks;
+    this.state = {
+      tasks: [new Task("pizza"), new Task("finish react course")]
+    }
   }
 
   render() {
     return (
       <div>
-        <StatusBar taskList={this.tasks}></StatusBar>
-        <AddTask addTaskCallback={this.pushTask}></AddTask>
+        <StatusBar tasks={this.state.tasks}></StatusBar>
+        <AddTask addTaskCallback={this.concatTask}></AddTask>
         <TaskList
-          tasksList={this.tasks}
-          propagateHardDeleteToApp={this.deleteTask.bind(this)}
-          propagateToggleEditModeToApp={this.toggleEditMode.bind(this)}
-          propagateTaskTextUpdateToApp={this.updateTaskText.bind(this)}
-          propagateToggleSoftDeleteToApp={this.toggleSoftDelete.bind(this)}
+          tasks={this.state.tasks}
+          propagateHardDeleteToApp={this.deleteTask}
+          propagateToggleEditModeToApp={this.toggleEditMode}
+          propagateTaskTextUpdateToApp={this.updateTaskText}
+          propagateToggleSoftDeleteToApp={this.toggleCrossTask}
         >
         </TaskList>
       </div>
     );
   }
 
-  deleteTask(delTask) {
-    this.tasks = this.tasks.filter(task => task !== delTask);
-    this.forceUpdate();
+  concatTask = (task) => {
+    let tasks = this.state.tasks;
+    if (task && !tasks.some(iTask => iTask.text === task.text))
+      this.setState({ tasks: tasks.concat(task) });
   }
 
-  pushTask(task) {
-    if (task)
-      this.tasks.push(task);
-    this.forceUpdate();
+  toggleEditMode = (task) => {
+    let tasks = this.state.tasks.slice();
+    tasks.forEach(iTask => {
+      if (iTask.text === task.text)
+        iTask.dblClicked = !iTask.dblClicked;
+    });
+    this.setState({ tasks: tasks });
   }
 
-  toggleEditMode(task) {
-    task.dblClicked = !task.dblClicked;
-    this.forceUpdate();
+  updateTaskText = (text, task) => {
+    let tasks = this.state.tasks.slice();
+    tasks.forEach(iTask => {
+      if (iTask.text === task.text)
+        iTask.text = text;
+    });
+    this.setState({ tasks: tasks });
   }
 
-  updateTaskText(text, task) {
-    task.text = text;
-    task.dblClicked = false;
-    task.isDone = false;
-    this.forceUpdate();
+  deleteTask = (delTask) => {
+    if (delTask)
+      this.setState({
+        tasks: this.state.tasks.slice().filter(iTask =>
+          iTask.text !== delTask.text)
+      });
   }
 
-  toggleSoftDelete(task) {
-    task.isDone = !task.isDone;
-    this.forceUpdate();
+  toggleCrossTask = (task) => {
+    let tasks = this.state.tasks.slice();
+    let curTask = tasks.filter(iTask => iTask.text === task.text)[0];
+    curTask.isDone = !curTask.isDone;
+    this.setState({ tasks: tasks });
   }
-
 }
 
 export default App;
