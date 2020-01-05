@@ -1,18 +1,19 @@
 import React from 'react';
-import TaskItem from './taskItem';
+import TaskItem from './TaskItem';
 import Task from '../entities/task';
+import DoneButton from './DoneButton';
 
 class TaskList extends React.Component {
     constructor(props) {
         super(props);
         this.tasks = props.tasksList;
         this.toggleTaskByText = this.toggleTaskByText.bind(this);
-        this.tasks.push(new Task("buy pizza"));
+       // this.tasks.push(new Task("buy pizza"));
     }
 
     componentWillReceiveProps(props) {
         this.tasks = props.tasksList;
-        this.forceUpdate();
+        this.setState(this.state);
     }
 
     render() {
@@ -25,19 +26,9 @@ class TaskList extends React.Component {
 
     printTasks(list) {
         let elements = [];
-        // console.log(list);
-        
         for (let task of list) {
             elements.push(<TaskItem text={task.text}></TaskItem>);
-            
-            // elements.push(<li key={task.text}>
-            //             <div onClick={this.toggleTaskByText}>
-            //                 {this.getTaskText(task)}
-            //             </div>
-            //         </li>)
         }
-        // console.log(elements);
-        
         return elements;
     }
 
@@ -51,7 +42,7 @@ class TaskList extends React.Component {
                 task.toggleTaskByText();
             }
         }
-        this.forceUpdate();
+        this.setState(this.state);
     }
 
     getTaskText(task) {
