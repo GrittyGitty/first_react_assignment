@@ -55,17 +55,18 @@ class App extends React.Component {
   }
 
   deleteTask = (delTask) => {
-    if (delTask)
-      this.setState({
-        tasks: this.state.tasks.slice().filter(iTask =>
-          iTask.text !== delTask.text)
-      });
+    this.setState({
+      tasks: this.state.tasks.slice().filter(iTask =>
+        iTask.text !== delTask.text)
+    });
   }
 
   toggleCrossTask = (task) => {
     let tasks = this.state.tasks.slice();
-    let curTask = tasks.filter(iTask => iTask.text === task.text)[0];
-    curTask.isDone = !curTask.isDone;
+    tasks.forEach(iTask => {
+      if (iTask.text === task.text)
+        iTask.isDone = !iTask.isDone
+    });
     this.setState({ tasks: tasks });
   }
 }
