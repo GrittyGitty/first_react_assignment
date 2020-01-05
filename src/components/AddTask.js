@@ -1,21 +1,21 @@
 import React from 'react';
-import Task from '../entities/task'
+import Task from '../entities/task';
+import reg from '../communicatorRegistry';
 
 export default class AddTask extends React.Component {
 
   constructor(props) {
     super(props);
-    this.concatTaskCallback = props.concatTaskCallback;
     this.state = { taskText: '' };
-
   }
 
   render() {
-    return <div>
-      <input onChange={this.handleTaskInputChange} id="task_input" type="text"></input>
-      <br></br>
-      <button onClick={this.handleAddTaskClick}>Add task</button>
-    </div>
+    return (
+      <div>
+        <input onChange={this.handleTaskInputChange}></input>
+        <br></br>
+        <button onClick={this.handleAddTaskClick}>Add task</button>
+      </div>);
   }
 
   handleTaskInputChange = (event) => {
@@ -23,6 +23,6 @@ export default class AddTask extends React.Component {
   }
 
   handleAddTaskClick = () => {
-    this.concatTaskCallback(new Task(this.state.taskText));
+    reg.action(reg.concatTask, new Task(this.state.taskText));
   }
 }

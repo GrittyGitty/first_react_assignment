@@ -5,11 +5,10 @@ class TaskItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = { task: props.task };
-
-        this.propagateHardDeleteToTaskList = this.props.propagateHardDeleteToApp;
-        this.propagateSoftDeleteToApp = this.props.propagateSoftDeleteToApp;
-        this.propagateToggleEditModeToTaskList = this.props.propagateToggleEditModeToApp;
-        this.propagateTaskTextUpdateToApp = this.props.propagateTaskTextUpdateToApp;
+        this.deleteTaskCallback = props.deleteTask;
+        this.crossTaskCallBack = props.toggleCrossTask;
+        this.toggleEditModeCallback = props.toggleEditMode;
+        this.taskTextUpdateCallback = props.updateTaskText;
     }
 
     componentWillReceiveProps(props) {
@@ -17,8 +16,10 @@ class TaskItem extends React.Component {
     }
 
     render() {
+        let { text, isDone, dblClicked } = this.state.task;
+
         let taskModule =
-            this.state.task.dblClicked ?
+            dblClicked ?
                 (<input
                     placeholder="edit task..."
                     onKeyDown={this.checkForEnter}>
@@ -26,9 +27,9 @@ class TaskItem extends React.Component {
                 (<span>
                     <span
                         onDoubleClick={this.editMode}>
-                        {this.state.task.isDone ?
-                            (<del>{this.state.task.text}</del>) :
-                            this.state.task.text}
+                        {isDone ?
+                            (<del>{text}</del>) :
+                            text}
                     </span>
                     <button
                         className="listDelButton"
@@ -57,21 +58,21 @@ class TaskItem extends React.Component {
 
     checkForEnter = (event) => {
         if (event.key === 'Enter') {
-            this.propagateTaskTextUpdateToApp(event.target.value, this.state.task)
+            this.taskTextUpdateCallback(event.target.value, this.state.task)
             this.editMode();
         }
     }
 
     editMode = () => {
-        this.propagateToggleEditModeToTaskList(this.state.task);
+        this.toggleEditModeCallback(this.state.task);
     }
 
     crossText = () => {
-        this.propagateSoftDeleteToApp(this.state.task);
+        this.crossTaskCallBack(this.state.task);
     }
 
     hardDelete = () => {
-        this.propagateHardDeleteToTaskList(this.state.task);
+        this.deleteTaskCallback(this.state.task);
     }
 }
 
