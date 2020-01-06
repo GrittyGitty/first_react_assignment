@@ -4,13 +4,14 @@ import Task from '../entities/task';
 import reg from '../communicatorRegistry';
 import StatusBar from './StatusBar';
 import AddTask from './AddTask';
-
+import { connect } from 'react-redux'
 
 class TaskList extends React.Component {
     constructor(props) {
         super(props);
+        console.log(props);
         this.state = {
-            tasks: [new Task("pizza"), new Task("finish react course")]
+            tasks: props.tasks
         };
     }
 
@@ -25,6 +26,7 @@ class TaskList extends React.Component {
     render() {
         return (
             <div>
+                <button onClick={this.concatTask.bind(this)}></button>
                 <StatusBar tasks={this.state.tasks}></StatusBar>
                 <AddTask></AddTask>
                 <ul>
@@ -49,9 +51,15 @@ class TaskList extends React.Component {
 
 
     concatTask(task) {
-        let tasks = this.state.tasks;
-        if (!tasks.some(iTask => iTask.text === task.text))
-            this.setState({ tasks: tasks.concat(task) });
+        // let tasks = this.state.tasks;
+        // if (!tasks.some(iTask => iTask.text === task.text))
+        //     this.setState({ tasks: tasks.concat(task) });
+        let newtask = new Task('SAY HELLO');
+        this.props.addNewTask(newtask)
+    }
+
+    componentWillReceiveProps(props){
+        this.setState({tasks : props.tasks})
     }
 
     deleteTask(delTask) {
@@ -90,4 +98,17 @@ class TaskList extends React.Component {
         this.setState({ tasks: tasks });
     }
 }
-export default TaskList;
+
+function mapStateToProps(state){
+    return { tasks: state.tasks }
+}
+
+function dispatchStateToProps(dispatch){
+    return {
+        addNewTask : (task) => {
+            dispatch({type : "ADD_TASK", payload : task})
+        }
+    }
+}
+
+export default connect(mapStateToProps, dispatchStateToProps)(TaskList)
