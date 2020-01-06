@@ -7,7 +7,6 @@ import StatusBar from './components/StatusBar';
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.tasks = [new Task("pizza"), new Task("finish react course")];
     this.state = {
       tasks: [new Task("pizza"), new Task("finish react course")]
     }
@@ -15,6 +14,10 @@ class App extends React.Component {
 
   render() {
     return (
+
+
+      
+
       <div>
         <StatusBar tasks={this.state.tasks}></StatusBar>
         <AddTask addTaskCallback={this.concatTask}></AddTask>
