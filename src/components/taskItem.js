@@ -4,12 +4,11 @@ class TaskItem extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { task: props.task };
-
-        this.propagateHardDeleteToTaskList = this.props.propagateHardDeleteToApp;
-        this.propagateSoftDeleteToApp = this.props.propagateSoftDeleteToApp;
-        this.propagateToggleEditModeToTaskList = this.props.propagateToggleEditModeToApp;
-        this.propagateTaskTextUpdateToApp = this.props.propagateTaskTextUpdateToApp;
+        this.state = { task: props.task }
+        this.onCrossClickCallback = props.onCrossClick;
+        this.onDelClickCallback = props.onDelClick;
+        this.onTaskDblClickCallback = props.onTaskDblClick;
+        this.onEditInputEnterClickCallback = props.onEditInputEnterClick;
     }
 
     componentWillReceiveProps(props) {
@@ -17,34 +16,35 @@ class TaskItem extends React.Component {
     }
 
     render() {
+        let task = this.state.task;
+
         let taskModule =
-            this.state.task.dblClicked ?
+            task.dblClicked ?
                 (<input
+                    autoFocus
                     placeholder="edit task..."
-                    onKeyDown={this.checkForEnter}>
+                    onKeyDown={this.checkForEnter.bind(this)}>
                 </input>) :
                 (<span>
                     <span
-                        onDoubleClick={this.editMode}>
-                        {this.state.task.isDone ?
-                            (<del>{this.state.task.text}</del>) :
-                            this.state.task.text}
+                        onDoubleClick={this.onTaskDblClick.bind(this)}>
+                        {task.isDone ?
+                            (<del>{task.text}</del>) :
+                            task.text}
                     </span>
                     <button
                         className="listDelButton"
-                        onClick={this.crossText}>
+                        onClick={this.onCrossClick.bind(this)}>
                         <del>done</del>
                     </button>
                 </span>);
-
         let deleteButton = (
             <button
-                onClick={this.hardDelete}
+                onClick={this.onDelClick.bind(this)}
                 className="listDelButton">
                 🗑️
             </button>
         );
-
         return (
             <li>
                 <span>
@@ -55,24 +55,24 @@ class TaskItem extends React.Component {
         );
     }
 
-    checkForEnter = (event) => {
-        if (event.key === 'Enter') {
-            this.propagateTaskTextUpdateToApp(event.target.value, this.state.task)
-            this.editMode();
-        }
+    checkForEnter(event) {
+        if (event.key === 'Enter')
+            this.onEditInputEnterClickCallback(this.state.task, event.target.value);
     }
 
-    editMode = () => {
-        this.propagateToggleEditModeToTaskList(this.state.task);
+    onTaskDblClick() {
+        this.onTaskDblClickCallback(this.state.task);
     }
 
-    crossText = () => {
-        this.propagateSoftDeleteToApp(this.state.task);
+    onCrossClick() {
+        this.onCrossClickCallback(this.state.task);
     }
 
-    hardDelete = () => {
-        this.propagateHardDeleteToTaskList(this.state.task);
+    onDelClick() {
+        this.onDelClickCallback(this.state.task);
     }
 }
 
+
 export default TaskItem;
+

@@ -1,16 +1,14 @@
 import React from 'react';
-
+import { connect } from 'react-redux';
 
 class StatusBar extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            tasks: props.tasks
-        }
+        this.state = { tasks: props.tasks };
     }
 
     componentWillReceiveProps(props) {
-        this.setState({ tasks: props.tasks });
+        this.setState({ tasks: props.tasks })
     }
 
     render() {
@@ -34,4 +32,10 @@ class StatusBar extends React.Component {
     }
 }
 
-export default StatusBar;
+
+function mapStateToProps({ tasks }) {
+    return { tasks: tasks };
+}
+
+
+export default connect(mapStateToProps)(StatusBar);

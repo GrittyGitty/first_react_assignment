@@ -1,8 +1,8 @@
 class Task {
-    constructor(text = "") {
+    constructor(text = "", isDone = false, dblClicked = false) {
         this.text = text;
-        this.isDone = false;
-        this.dblClicked = false;
+        this.isDone = isDone;
+        this.dblClicked = dblClicked;
     }
     toggleDone() {
         this.isDone = !this.isDone;
