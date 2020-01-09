@@ -34,8 +34,8 @@ const dispatchToProps = {
   })
 };
 
-function mapStateToProps(props) {
-  return { tasks: props.tasks };
+function mapStateToProps(state) {
+  return { tasks: state.tasks };
 }
 
 export default connect(mapStateToProps, dispatchToProps)(App);

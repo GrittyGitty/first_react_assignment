@@ -36,9 +36,9 @@ const mapDispatchToProps = {
 };
 
 
-const mapStateToProps = (props) => {
+const mapStateToProps = (state) => {
     return {
-        tasks: props.tasks
+        tasks: state.tasks
     }
 }
 
