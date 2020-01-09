@@ -1,25 +1,20 @@
 import React from 'react';
 import TaskItem from './TaskItem';
-import Task from '../entities/task';
-import DoneButton from './DoneButton';
 
 class TaskList extends React.Component {
     constructor(props) {
         super(props);
-        this.tasks = props.tasksList;
-        this.toggleTaskByText = this.toggleTaskByText.bind(this);
-       // this.tasks.push(new Task("buy pizza"));
-    }
+        this.state = { tasksList: props.tasksList };
+        this.deleteTaskCallback = props.deleteTaskCallback;
+        this.suDeleteTaskCallback = props.suDeleteTaskCallback;
+        this.deleteTaskFromApp = this.deleteTaskFromApp.bind(this);
 
-    componentWillReceiveProps(props) {
-        this.tasks = props.tasksList;
-        this.setState(this.state);
     }
 
     render() {
         return <div>
             <ul>
-                {this.printTasks(this.tasks)}
+                {this.printTasks(this.state.tasksList)}
             </ul>
         </div>
     }
@@ -27,32 +22,26 @@ class TaskList extends React.Component {
     printTasks(list) {
         let elements = [];
         for (let task of list) {
-            elements.push(<TaskItem text={task.text}></TaskItem>);
+            elements.push(<TaskItem key={"item" + list.indexOf(task)}
+                deleteTaskCallback={this.deleteTaskFromApp} text={task.text} task={task}></TaskItem>);
         }
         return elements;
     }
 
+    deleteTaskFromApp(text) {
+        console.log('hey from delte task from app');
 
 
-    toggleTaskByText(event) {
-        console.log(event.target);
-        let text = "a";
-        for (let task of this.tasks) {
-            if (task.text === text) {
-                task.toggleTaskByText();
-            }
-        }
-        this.setState(this.state);
+        let newHobbieList = this.state.tasksList.filter(hobbie => {
+            return hobbie.text !== text;
+        });
+        console.log(newHobbieList);
+
+        this.setState({ tasksList: newHobbieList });
+        console.log(this.state.tasksList);
+
+        // this.props.suDeleteTaskCallback(task);
     }
-
-    getTaskText(task) {
-        if (task.isDone) {
-            return <p><del>{task.text}</del></p>
-        }
-        else {
-            return <p>{task.text}</p>
-        }
-    }
-
 }
+
 export default TaskList;
