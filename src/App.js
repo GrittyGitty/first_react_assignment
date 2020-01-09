@@ -10,12 +10,7 @@ class App extends React.Component {
     return (
       <div>
         <StatusBar
-          isDoneBreakDown={
-            tasks.reduce((acc, task) => {
-              acc[task.isDone ? "done" : "undone"]++
-              return acc;
-            }, { done: 0, undone: 0 })
-          }>
+          isDoneBreakDown={tasks.reduce(reducer, { done: 0, undone: 0 })}>
         </StatusBar>
         <AddTask
           tasks={tasks}
@@ -27,6 +22,10 @@ class App extends React.Component {
   }
 }
 
+function reducer(acc, task) {
+  acc[task.isDone ? "done" : "undone"]++
+  return acc;
+}
 
 const dispatchToProps = {
   addTaskClick: (task) => ({

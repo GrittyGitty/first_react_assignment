@@ -39,7 +39,6 @@ const store = createStore((state = initialState, action) => {
                         task)
             });
         case "TOGGLE_EDIT_MODE":
-            console.log(tasks, payload);
             return Object.assign({}, state, {
                 tasks: tasks.map(task =>
                     (task.text === payload.text) ?
