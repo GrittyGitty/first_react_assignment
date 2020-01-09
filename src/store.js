@@ -11,11 +11,10 @@ let initialState = {
     ]
 };
 
-
 const store = createStore((state = initialState, action) => {
     let { tasks } = state;
     let { payload, type } = action;
-    console.log(tasks, payload, type);
+
     switch (type) {
         case "ADD_TASK":
             return Object.assign({}, state, {
@@ -40,10 +39,11 @@ const store = createStore((state = initialState, action) => {
                         task)
             });
         case "TOGGLE_EDIT_MODE":
+            console.log(tasks, payload);
             return Object.assign({}, state, {
                 tasks: tasks.map(task =>
                     (task.text === payload.text) ?
-                        task = new Task(task.text, false, !task.dblClicked) :
+                        new Task(task.text, false, true) :
                         task
                 )
             });

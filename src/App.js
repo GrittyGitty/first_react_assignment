@@ -2,26 +2,40 @@ import React from 'react';
 import AddTask from './components/AddTask';
 import TaskList from './components/TaskList';
 import StatusBar from './components/StatusBar';
-import { Provider } from 'react-redux';
-import store from './store';
-
+import { connect } from 'react-redux';
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
+    let tasks = this.props.tasks;
     return (
-      <Provider store={store}>
-        <div>
-          <StatusBar></StatusBar>
-          <AddTask></AddTask>
-          <TaskList></TaskList>
-        </div>
-      </Provider>
+      <div>
+        <StatusBar
+          isDoneBreakDown={
+            tasks.reduce((acc, task) => {
+              acc[task.isDone ? "done" : "undone"]++
+              return acc;
+            }, { done: 0, undone: 0 })
+          }>
+        </StatusBar>
+        <AddTask
+          tasks={tasks}
+          addTaskClick={this.props.addTaskClick}
+        ></AddTask>
+        <TaskList tasks={tasks}></TaskList>
+      </div>
     );
   }
 }
 
-export default App;
+
+const dispatchToProps = {
+  addTaskClick: (task) => ({
+    type: "ADD_TASK", payload: task
+  })
+};
+
+function mapStateToProps(props) {
+  return { tasks: props.tasks };
+}
+
+export default connect(mapStateToProps, dispatchToProps)(App);

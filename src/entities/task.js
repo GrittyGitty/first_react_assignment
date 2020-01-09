@@ -4,12 +4,6 @@ class Task {
         this.isDone = isDone;
         this.dblClicked = dblClicked;
     }
-    toggleDone() {
-        this.isDone = !this.isDone;
-    }
-    toggleDblClicked() {
-        this.dblClicked = !this.dblClicked;
-    }
 }
 
 export default Task;

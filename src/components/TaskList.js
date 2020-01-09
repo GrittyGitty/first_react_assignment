@@ -4,65 +4,42 @@ import { connect } from 'react-redux';
 
 
 class TaskList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { tasks: props.tasks };
-        this.onCrossClick = props.onCrossClick;
-        this.onDelClick = props.onDelClick;
-        this.onTaskDblClick = props.onTaskDblClick;
-        this.onEditInputEnterClick = props.onEditInputEnterClick
-    }
-
-    componentWillReceiveProps(props) {
-        this.setState({ tasks: props.tasks })
-    }
-
     render() {
         return (
             <div>
                 <ul>
-                    {this.printTasks(this.state.tasks)}
+                    {
+                        this.props.tasks.map((task, index) => {
+                            return (
+                                <TaskItem
+                                    key={index}
+                                    task={task}
+                                    onCrossClick={this.props.onCrossClick}
+                                    onDelClick={this.props.onDelClick}
+                                    onTaskDblClick={this.props.onTaskDblClick}
+                                    onEditInputEnterClick={this.props.onEditInputEnterClick}
+                                ></TaskItem>
+                            );
+                        })
+                    }
                 </ul>
             </div>
         )
     }
-
-    printTasks(list) {
-        return list.map((task, index) => {
-            return ((
-                <TaskItem
-                    key={index}
-                    task={task}
-                    onCrossClick={this.onCrossClick}
-                    onDelClick={this.onDelClick}
-                    onTaskDblClick={this.onTaskDblClick}
-                    onEditInputEnterClick={this.onEditInputEnterClick}
-                ></TaskItem>
-            ))
-        });
-    }
-
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = {
+    onCrossClick: (task) => { return { type: "TOGGLE_CROSS_TASK", payload: task } },
+    onDelClick: (task) => ({ type: "REMOVE_TASK", payload: task }),
+    onTaskDblClick: (task) => ({ type: "TOGGLE_EDIT_MODE", payload: task }),
+    onEditInputEnterClick: (task, text) => ({ type: "UPDATE_TASK", payload: { task, text } })
+};
+
+
+const mapStateToProps = (props) => {
     return {
-        onCrossClick: (task) => {
-            dispatch({ type: "TOGGLE_CROSS_TASK", payload: task });
-        },
-        onDelClick: (task) => {
-            dispatch({ type: "REMOVE_TASK", payload: task });
-        },
-        onTaskDblClick: (task) => {
-            dispatch({ type: "TOGGLE_EDIT_MODE", payload: task });
-        },
-        onEditInputEnterClick: (task, text) => {
-            dispatch({ type: "UPDATE_TASK", payload: { task, text } })
-        }
+        tasks: props.tasks
     }
-}
-
-function mapStateToProps(props) {
-    return { tasks: props.tasks };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskList);
